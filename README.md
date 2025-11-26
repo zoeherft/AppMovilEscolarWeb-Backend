@@ -178,46 +178,46 @@ http://127.0.0.1:8000/
 
 ### 🔐 Autenticación
 
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| POST | `/login/` | Iniciar sesión | ❌ |
-| GET | `/logout/` | Cerrar sesión | ✅ |
+| Método | Endpoint | Descripción | Requiere Auth |
+|--------|----------|-------------|---------------|
+| POST | `/login/` | Iniciar sesión | No |
+| GET | `/logout/` | Cerrar sesión | Sí |
 
 ### 👨‍💼 Administradores
 
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| GET | `/lista-admins/` | Listar todos los administradores | ✅ |
-| GET | `/admin/?id={id}` | Obtener administrador por ID | ✅ |
-| POST | `/admin/` | Crear nuevo administrador | ❌ |
-| PUT | `/admin/` | Actualizar administrador | ✅ |
-| DELETE | `/admin/?id={id}` | Eliminar administrador | ✅ |
+| Método | Endpoint | Descripción | Requiere Auth |
+|--------|----------|-------------|---------------|
+| GET | `/lista-admins/` | Listar todos los administradores | Sí |
+| GET | `/admin/?id={id}` | Obtener administrador por ID | Sí |
+| POST | `/admin/` | Crear nuevo administrador | No |
+| PUT | `/admin/` | Actualizar administrador | Sí |
+| DELETE | `/admin/?id={id}` | Eliminar administrador | Sí |
 
 ### 👨‍🏫 Maestros
 
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| GET | `/lista-maestros/` | Listar todos los maestros | ✅ |
-| GET | `/maestros/?id={id}` | Obtener maestro por ID | ✅ |
-| POST | `/maestros/` | Crear nuevo maestro | ❌ |
-| PUT | `/maestros/` | Actualizar maestro | ✅ |
-| DELETE | `/maestros/?id={id}` | Eliminar maestro | ✅ |
+| Método | Endpoint | Descripción | Requiere Auth |
+|--------|----------|-------------|---------------|
+| GET | `/lista-maestros/` | Listar todos los maestros | Sí |
+| GET | `/maestros/?id={id}` | Obtener maestro por ID | Sí |
+| POST | `/maestros/` | Crear nuevo maestro | No |
+| PUT | `/maestros/` | Actualizar maestro | Sí |
+| DELETE | `/maestros/?id={id}` | Eliminar maestro | Sí |
 
 ### 👨‍🎓 Alumnos
 
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| GET | `/lista-alumnos/` | Listar todos los alumnos | ✅ |
-| GET | `/alumnos/?id={id}` | Obtener alumno por ID | ✅ |
-| POST | `/alumnos/` | Crear nuevo alumno | ❌ |
-| PUT | `/alumnos/` | Actualizar alumno | ✅ |
-| DELETE | `/alumnos/?id={id}` | Eliminar alumno | ✅ |
+| Método | Endpoint | Descripción | Requiere Auth |
+|--------|----------|-------------|---------------|
+| GET | `/lista-alumnos/` | Listar todos los alumnos | Sí |
+| GET | `/alumnos/?id={id}` | Obtener alumno por ID | Sí |
+| POST | `/alumnos/` | Crear nuevo alumno | No |
+| PUT | `/alumnos/` | Actualizar alumno | Sí |
+| DELETE | `/alumnos/?id={id}` | Eliminar alumno | Sí |
 
 ### 📊 Estadísticas
 
-| Método | Endpoint | Descripción | Auth |
-|--------|----------|-------------|------|
-| GET | `/total-usuarios/` | Total de usuarios por rol | ❌ |
+| Método | Endpoint | Descripción | Requiere Auth |
+|--------|----------|-------------|---------------|
+| GET | `/total-usuarios/` | Total de usuarios por rol | No |
 
 ---
 
