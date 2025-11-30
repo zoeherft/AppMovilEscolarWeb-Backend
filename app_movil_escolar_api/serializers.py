@@ -29,3 +29,30 @@ class MaestroSerializer(serializers.ModelSerializer):
     class Meta:
         model = Maestros
         fields = '__all__'
+
+class ResponsableSerializer(serializers.ModelSerializer):
+    """Serializer simplificado para mostrar responsables (maestros y admins)"""
+    nombre_completo = serializers.SerializerMethodField()
+    rol = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'email', 'nombre_completo', 'rol')
+    
+    def get_nombre_completo(self, obj):
+        return f"{obj.first_name} {obj.last_name}"
+    
+    def get_rol(self, obj):
+        # Determinar si es maestro o administrador
+        if Maestros.objects.filter(user=obj).exists():
+            return 'maestro'
+        elif Administradores.objects.filter(user=obj).exists():
+            return 'administrador'
+        return 'desconocido'
+
+class EventoAcademicoSerializer(serializers.ModelSerializer):
+    responsable_info = ResponsableSerializer(source='responsable', read_only=True)
+    
+    class Meta:
+        model = EventosAcademicos
+        fields = '__all__'
