@@ -12,7 +12,7 @@ python manage.py collectstatic --no-input
 # Aplicar migraciones
 python manage.py migrate
 
-# Crear superusuario si no existe (usa variables de entorno)
+# Crear o actualizar superusuario (usa variables de entorno)
 python manage.py shell << EOF
 from django.contrib.auth import get_user_model
 import os
@@ -22,9 +22,16 @@ username = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'admin')
 email = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@example.com')
 password = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'admin123')
 
-if not User.objects.filter(username=username).exists():
-    User.objects.create_superuser(username=username, email=email, password=password)
+user, created = User.objects.get_or_create(username=username, defaults={'email': email, 'is_superuser': True, 'is_staff': True})
+user.set_password(password)
+user.email = email
+user.is_superuser = True
+user.is_staff = True
+user.save()
+
+if created:
     print(f'Superusuario "{username}" creado exitosamente')
 else:
-    print(f'El superusuario "{username}" ya existe')
+    print(f'Superusuario "{username}" actualizado exitosamente')
 EOF
+
