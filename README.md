@@ -2,6 +2,13 @@
 
 Backend desarrollado con **Django REST Framework** para el sistema de gestión de eventos académicos universitarios. Proporciona APIs RESTful para la administración de usuarios y eventos académicos.
 
+## 🌐 Despliegue
+
+- **Producción**: [https://app-eventos-backend.onrender.com](https://app-eventos-backend.onrender.com)
+- **Frontend**: [https://app-eventos-frontend.vercel.app](https://app-eventos-frontend.vercel.app)
+
+---
+
 ## 📋 Tabla de Contenidos
 
 - [Características](#-características)
@@ -9,9 +16,10 @@ Backend desarrollado con **Django REST Framework** para el sistema de gestión d
 - [Requisitos Previos](#-requisitos-previos)
 - [Instalación](#-instalación)
 - [Configuración de Base de Datos](#-configuración-de-base-de-datos)
-- [Ejecución del Servidor](#-ejecución-del-servidor)
+- [Variables de Entorno](#-variables-de-entorno)
+- [Ejecución](#-ejecución)
 - [Endpoints de la API](#-endpoints-de-la-api)
-- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [Despliegue en Render](#-despliegue-en-render)
 
 ---
 
@@ -20,70 +28,64 @@ Backend desarrollado con **Django REST Framework** para el sistema de gestión d
 - ✅ **CRUD completo** para Eventos Académicos
 - ✅ **Gestión de usuarios** (Administradores, Maestros y Alumnos)
 - ✅ **Autenticación** mediante Token Bearer
-- ✅ **Control de acceso por roles** (Admin: CRUD completo, Maestros/Alumnos: solo lectura)
+- ✅ **Control de acceso por roles**
 - ✅ **Validación de datos** en todas las operaciones
-- ✅ **Tipos de eventos**: Conferencias, Talleres, Seminarios, Concursos
-- ✅ **CORS habilitado** para comunicación con el Frontend
+- ✅ **CORS configurado** para comunicación segura con el Frontend
+- ✅ **WhiteNoise** para servir archivos estáticos en producción
 
 ---
 
 ## 🛠 Tecnologías
 
-| Tecnología | Versión |
-|------------|---------|
-| Python | 3.10+ |
-| Django | 5.0.2 |
-| Django REST Framework | 3.16.1 |
-| MySQL/MariaDB | 8.0+ |
-| PyMySQL | Latest |
+| Tecnología | Versión | Uso |
+|------------|---------|-----|
+| Python | 3.10+ | Lenguaje principal |
+| Django | 5.0.2 | Framework web |
+| Django REST Framework | 3.16.1 | APIs REST |
+| PostgreSQL | 15+ | Base de datos (producción) |
+| MySQL | 8.0+ | Base de datos (desarrollo) |
+| Gunicorn | 21.2.0 | Servidor WSGI |
+| WhiteNoise | 6.6.0 | Archivos estáticos |
 
 ---
 
 ## 📦 Requisitos Previos
 
-Antes de comenzar, asegúrate de tener instalado:
-
-1. **Python 3.10 o superior**
+1. **Python 3.10+**
    ```bash
    python --version
    ```
 
-2. **pip** (gestor de paquetes de Python)
+2. **pip**
    ```bash
    pip --version
    ```
 
-3. **MySQL/MariaDB** instalado y corriendo
+3. **MySQL** (solo para desarrollo local)
    ```bash
    mysql --version
-   ```
-
-4. **Virtualenv** (recomendado)
-   ```bash
-   pip install virtualenv
    ```
 
 ---
 
 ## 🚀 Instalación
 
-### Paso 1: Navegar al proyecto
+### Paso 1: Clonar y navegar
 
 ```bash
+git clone https://github.com/ivanblueberry/app-eventos-backend.git
 cd app-movil-escolar-backend
 ```
 
 ### Paso 2: Crear entorno virtual
 
 ```bash
-# Crear entorno virtual
 python -m venv venv
 
-# Activar entorno virtual
-# En macOS/Linux:
+# macOS/Linux:
 source venv/bin/activate
 
-# En Windows:
+# Windows:
 venv\Scripts\activate
 ```
 
@@ -97,135 +99,115 @@ pip install -r requirements.txt
 
 ## 🗄 Configuración de Base de Datos
 
-### Paso 1: Crear la base de datos en MySQL
+### Para desarrollo local (MySQL)
 
-```sql
--- Conectarse a MySQL
-mysql -u root -p
+1. **Crear la base de datos:**
+   ```sql
+   CREATE DATABASE app_movil_escolar_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   ```
 
--- Crear la base de datos
-CREATE DATABASE eventos_academicos_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+2. **Crear archivo de configuración:**
+   
+   Copia `my.cnf` a `my.cnf.local` y edita con tus credenciales:
+   ```bash
+   cp my.cnf my.cnf.local
+   ```
+   
+   Edita `my.cnf.local`:
+   ```ini
+   [client]
+   host=127.0.0.1
+   port = 3306
+   database = app_movil_escolar_db
+   user = tu_usuario
+   password = tu_contraseña
+   default-character-set = utf8mb4
+   ```
 
--- Salir
-EXIT;
-```
-
-### Paso 2: Configurar credenciales
-
-Edita el archivo `my.cnf` con tus credenciales:
-
-```ini
-[client]
-host=127.0.0.1
-port = 3306
-database = eventos_academicos_db
-user = root
-password = tu_password
-default-character-set = utf8mb4
-```
-
-### Paso 3: Ejecutar migraciones
-
-```bash
-# Crear migraciones
-python manage.py makemigrations
-
-# Aplicar migraciones
-python manage.py migrate
-```
-
-### Paso 4: Crear superusuario (opcional)
-
-```bash
-python manage.py createsuperuser
-```
+3. **Ejecutar migraciones:**
+   ```bash
+   python manage.py migrate
+   ```
 
 ---
 
-## ▶️ Ejecución del Servidor
+## 🔐 Variables de Entorno
 
+### Desarrollo
+No se requieren variables de entorno para desarrollo local.
+
+### Producción (Render)
+
+| Variable | Descripción | Ejemplo |
+|----------|-------------|---------|
+| `SECRET_KEY` | Clave secreta de Django | `tu-clave-secreta-muy-larga` |
+| `DEBUG` | Modo debug | `False` |
+| `DATABASE_URL` | URL de PostgreSQL | `postgres://user:pass@host:5432/db` |
+| `VERCEL_FRONTEND_URL` | URL del frontend | `https://app-eventos-frontend.vercel.app` |
+| `DJANGO_SUPERUSER_USERNAME` | Usuario admin | `admin` |
+| `DJANGO_SUPERUSER_EMAIL` | Email admin | `admin@example.com` |
+| `DJANGO_SUPERUSER_PASSWORD` | Contraseña admin | `tu-password-seguro` |
+
+---
+
+## ▶️ Ejecución
+
+### Desarrollo
 ```bash
-# Iniciar servidor de desarrollo
 python manage.py runserver
-
-# El servidor estará disponible en:
-# http://127.0.0.1:8000/
+# Disponible en: http://127.0.0.1:8000/
 ```
+
+### Producción
+El servidor usa Gunicorn configurado en `render.yaml`.
 
 ---
 
 ## 📡 Endpoints de la API
 
 ### Base URL
-```
-http://127.0.0.1:8000/
-```
+- **Local**: `http://127.0.0.1:8000`
+- **Producción**: `https://app-eventos-backend.onrender.com`
 
 ### 🔐 Autenticación
 
-| Método | Endpoint | Descripción | Requiere Auth |
-|--------|----------|-------------|---------------|
-| POST | `/login/` | Iniciar sesión | No |
-| GET | `/logout/` | Cerrar sesión | Sí |
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| POST | `/login/` | Iniciar sesión |
+| GET | `/logout/` | Cerrar sesión |
 
-### 📅 Eventos Académicos
+### 📅 Eventos
 
-| Método | Endpoint | Descripción | Requiere Auth | Permisos |
-|--------|----------|-------------|---------------|----------|
-| GET | `/lista-eventos/` | Listar eventos (filtrado por rol) | Sí | Todos |
-| GET | `/eventos/?id={id}` | Obtener evento por ID | Sí | Todos |
-| POST | `/eventos/` | Crear nuevo evento | Sí | Solo Admin |
-| PUT | `/eventos/` | Actualizar evento | Sí | Solo Admin |
-| DELETE | `/eventos/?id={id}` | Eliminar evento | Sí | Solo Admin |
-| GET | `/responsables/` | Listar responsables disponibles | Sí | Solo Admin |
+| Método | Endpoint | Descripción | Permisos |
+|--------|----------|-------------|----------|
+| GET | `/lista-eventos/` | Listar eventos | Todos |
+| GET | `/eventos/?id={id}` | Obtener evento | Todos |
+| POST | `/eventos/` | Crear evento | Solo Admin |
+| PUT | `/eventos/` | Actualizar evento | Solo Admin |
+| DELETE | `/eventos/?id={id}` | Eliminar evento | Solo Admin |
 
 ### 👥 Usuarios
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| GET/POST/PUT/DELETE | `/admin/` | CRUD de Administradores |
-| GET/POST/PUT/DELETE | `/maestros/` | CRUD de Maestros |
-| GET/POST/PUT/DELETE | `/alumnos/` | CRUD de Alumnos |
-| GET | `/lista-admins/` | Listar administradores |
-| GET | `/lista-maestros/` | Listar maestros |
-| GET | `/lista-alumnos/` | Listar alumnos |
-
-### 📊 Estadísticas
-
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/total-usuarios/` | Total de usuarios por rol |
+| GET/POST/PUT/DELETE | `/admin/` | CRUD Administradores |
+| GET/POST/PUT/DELETE | `/maestros/` | CRUD Maestros |
+| GET/POST/PUT/DELETE | `/alumnos/` | CRUD Alumnos |
 
 ---
 
-## 📅 Modelo de Evento Académico
+## 🚀 Despliegue en Render
 
-```python
-{
-    "nombre_evento": "Congreso de Tecnología 2025",
-    "tipo_evento": "Conferencia",  # Conferencia, Taller, Seminario, Concurso
-    "fecha_realizacion": "2025-12-15",
-    "hora_inicio": "09:00",
-    "hora_fin": "14:00",
-    "lugar": "Auditorio Principal",
-    "publico_objetivo": ["Alumnos", "Maestros"],  # Array JSON
-    "programa_educativo": "ICC",  # ICC, LCC, ITI (solo si público incluye Alumnos)
-    "responsable": 1,  # ID del usuario responsable (Maestro o Admin)
-    "descripcion": "Descripción del evento (máx 300 caracteres)",
-    "cupo_maximo": 100
-}
-```
+1. **Conectar repositorio** en [render.com](https://render.com)
 
-### Tipos de Evento
-- **Conferencia**: Charlas magistrales
-- **Taller**: Actividades prácticas
-- **Seminario**: Sesiones de estudio
-- **Concurso**: Competencias académicas
+2. **Configurar variables de entorno** (ver sección anterior)
 
-### Programas Educativos
-- **ICC**: Ingeniería en Ciencias de la Computación
-- **LCC**: Licenciatura en Ciencias de la Computación
-- **ITI**: Ingeniería en Tecnologías de la Información
+3. **El archivo `render.yaml`** configura automáticamente:
+   - Web Service con Gunicorn
+   - Base de datos PostgreSQL
+   - Build command: `./build.sh`
+
+4. **Push a main** para desplegar automáticamente
 
 ---
 
@@ -234,53 +216,44 @@ http://127.0.0.1:8000/
 ```
 app-movil-escolar-backend/
 ├── app_movil_escolar_api/
-│   ├── __init__.py
-│   ├── admin.py
-│   ├── models.py              # Modelos: Administradores, Maestros, Alumnos, EventosAcademicos
-│   ├── serializers.py         # Serializadores para la API
-│   ├── settings.py            # Configuración de Django
-│   ├── urls.py                # Rutas de la API
-│   ├── views/
-│   │   ├── __init__.py
-│   │   ├── users.py           # Vistas de Administradores
-│   │   ├── maestros.py        # Vistas de Maestros
-│   │   ├── alumnos.py         # Vistas de Alumnos
-│   │   ├── eventos.py         # Vistas de Eventos Académicos
-│   │   ├── auth.py            # Vistas de Autenticación
-│   │   └── bootstrap.py
-│   └── migrations/
-├── static/
-├── manage.py
-├── requirements.txt
-├── my.cnf                     # Configuración de MySQL
-└── README.md
+│   ├── models.py           # Modelos de datos
+│   ├── serializers.py      # Serializadores
+│   ├── settings.py         # Configuración
+│   ├── urls.py             # Rutas
+│   └── views/              # Controladores
+├── build.sh                # Script de build para Render
+├── render.yaml             # Configuración de Render
+├── requirements.txt        # Dependencias
+├── my.cnf                  # Plantilla de config MySQL
+└── manage.py
 ```
 
 ---
 
-## 🔧 Solución de Problemas Comunes
+## 🔧 Solución de Problemas
 
-### Error: "No module named 'pymysql'"
-```bash
-pip install pymysql
-```
+### Error de conexión a MySQL
+- Verifica que `my.cnf.local` tenga las credenciales correctas
+- Asegúrate de que MySQL esté corriendo
 
-### Error: "Access denied for user"
-Verifica las credenciales en `my.cnf`.
+### Error 401 en API
+- Verifica que el token Bearer esté en el header
+- El token puede haber expirado, vuelve a hacer login
 
-### Error: "CORS blocked"
-Asegúrate de que el frontend esté en `CORS_ALLOWED_ORIGINS` en `settings.py`.
+### CORS Error
+- Verifica `CORS_ALLOWED_ORIGINS` en `settings.py`
+- En producción, configura `VERCEL_FRONTEND_URL`
 
 ---
 
 ## 👥 Autores
 
 - **Materia**: Desarrollo de Aplicaciones Móviles
-- **Semestre**: Séptimo Semestre
+- **Institución**: Universidad
 - **Fecha**: Noviembre 2025
 
 ---
 
 ## 📄 Licencia
 
-Este proyecto es para fines educativos.
+Proyecto educativo - Todos los derechos reservados.

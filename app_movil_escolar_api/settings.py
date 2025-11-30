@@ -3,9 +3,11 @@ import dj_database_url
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Mantén la clave secreta en variables de entorno en producción
-SECRET_KEY = os.environ.get('SECRET_KEY', '-_&+lsebec(whhw!%n@ww&1j=4-^j_if9x8$q778+99oz&!ms2')
+# SECURITY WARNING: Mantén la clave secreta en variables de entorno en producción
+# En desarrollo se usará una clave por defecto, pero en producción DEBE configurarse
+SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-only-secret-key-change-in-production')
 
+# SECURITY WARNING: No usar DEBUG=True en producción
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 # Hosts permitidos
@@ -100,11 +102,16 @@ if DATABASE_URL:
     }
 else:
     # Desarrollo: usar MySQL local
+    # Buscar primero my.cnf.local (con credenciales reales), si no existe usar my.cnf (plantilla)
+    local_cnf = os.path.join(BASE_DIR, "my.cnf.local")
+    default_cnf = os.path.join(BASE_DIR, "my.cnf")
+    mysql_config_file = local_cnf if os.path.exists(local_cnf) else default_cnf
+    
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
             'OPTIONS': {
-                'read_default_file': os.path.join(BASE_DIR, "my.cnf"),
+                'read_default_file': mysql_config_file,
                 'charset': 'utf8mb4',
             }
         }

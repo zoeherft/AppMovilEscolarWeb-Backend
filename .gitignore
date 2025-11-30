@@ -57,3 +57,10 @@ sistema_fcc_api/migrations
 # Upload data
 /uploadData
 .DS_Store
+
+# Configuración local de MySQL (con credenciales reales)
+my.cnf.local
+
+# Variables de entorno
+.env
+.env.local
