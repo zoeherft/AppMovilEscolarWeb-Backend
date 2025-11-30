@@ -1,0 +1,25 @@
+# render.yaml - Blueprint de Render
+databases:
+  - name: app-escolar-db
+    databaseName: app_escolar_db
+    user: app_escolar_user
+    plan: free
+
+services:
+  - type: web
+    name: app-movil-escolar-backend
+    runtime: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn app_movil_escolar_api.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: app-escolar-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DEBUG
+        value: "False"

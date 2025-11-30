@@ -1,13 +1,20 @@
 import os
+import dj_database_url
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Mantén la clave secreta en variables de entorno en producción
-SECRET_KEY = '-_&+lsebec(whhw!%n@ww&1j=4-^j_if9x8$q778+99oz&!ms2'
+SECRET_KEY = os.environ.get('SECRET_KEY', '-_&+lsebec(whhw!%n@ww&1j=4-^j_if9x8$q778+99oz&!ms2')
 
-DEBUG = True  # en desarrollo
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
+# Hosts permitidos
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+
+# Agregar el host de Render en producción
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -24,6 +31,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # WhiteNoise para servir archivos estáticos
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',     # CORS debe ir antes de CommonMiddleware
     'django.middleware.common.CommonMiddleware',
@@ -37,6 +45,11 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
 ]
+
+# Agregar el dominio de Vercel en producción (actualiza con tu dominio real)
+VERCEL_FRONTEND_URL = os.environ.get('VERCEL_FRONTEND_URL')
+if VERCEL_FRONTEND_URL:
+    CORS_ALLOWED_ORIGINS.append(VERCEL_FRONTEND_URL)
 CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'app_movil_escolar_api.urls'
@@ -49,9 +62,10 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 STATIC_URL = "/static/"
-# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-# TEMPLATES[0]["DIRS"] = [os.path.join(BASE_DIR, "templates")]
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+# WhiteNoise para comprimir y cachear archivos estáticos
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 TEMPLATES = [
     {
@@ -71,15 +85,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app_movil_escolar_api.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            'read_default_file': os.path.join(BASE_DIR, "my.cnf"),
-            'charset': 'utf8mb4',
+# Configuración de Base de Datos
+# Usa PostgreSQL en producción (Render) y MySQL en desarrollo
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if DATABASE_URL:
+    # Producción: usar PostgreSQL de Render
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+else:
+    # Desarrollo: usar MySQL local
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'OPTIONS': {
+                'read_default_file': os.path.join(BASE_DIR, "my.cnf"),
+                'charset': 'utf8mb4',
+            }
         }
     }
-}
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
