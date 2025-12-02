@@ -40,6 +40,8 @@ urlpatterns = [
         path('lista-eventos/', eventos.EventosAllView.as_view()),
     #Responsables (maestros y administradores)
         path('responsables/', eventos.ResponsablesView.as_view()),
+    #Estadísticas de Eventos
+        path('estadisticas-eventos/', eventos.EstadisticasEventosView.as_view()),
 ]
 
 if settings.DEBUG:

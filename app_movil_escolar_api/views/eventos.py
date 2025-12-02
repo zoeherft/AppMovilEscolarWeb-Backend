@@ -266,3 +266,35 @@ class ResponsablesView(APIView):
         
         serializer = ResponsableSerializer(usuarios, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class EstadisticasEventosView(APIView):
+    """Vista para obtener estadísticas de eventos académicos"""
+    authentication_classes = [BearerTokenAuthentication]
+    
+    def get(self, request):
+        """Obtener estadísticas de eventos por tipo y por nombre"""
+        token = request.META.get('HTTP_AUTHORIZATION')
+        if not token:
+            return Response({"error": "Token requerido"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        from django.db.models import Count
+        
+        # Estadísticas por tipo de evento
+        eventos_por_tipo = EventosAcademicos.objects.values('tipo_evento').annotate(
+            cantidad=Count('id')
+        ).order_by('-cantidad')
+        
+        # Estadísticas por nombre de evento (top 10)
+        eventos_por_nombre = EventosAcademicos.objects.values('nombre_evento').annotate(
+            cantidad=Count('id')
+        ).order_by('-cantidad')[:10]
+        
+        # Total de eventos
+        total_eventos = EventosAcademicos.objects.count()
+        
+        return Response({
+            "total_eventos": total_eventos,
+            "por_tipo": list(eventos_por_tipo),
+            "por_nombre": list(eventos_por_nombre)
+        }, status=status.HTTP_200_OK)
