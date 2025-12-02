@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from .views.bootstrap import VersionView
+from .views.bootstrap import VersionView, PoblarBaseDatosView
 from app_movil_escolar_api.views import bootstrap
 from app_movil_escolar_api.views import users
 from app_movil_escolar_api.views import alumnos
@@ -42,6 +42,8 @@ urlpatterns = [
         path('responsables/', eventos.ResponsablesView.as_view()),
     #Estadísticas de Eventos
         path('estadisticas-eventos/', eventos.EstadisticasEventosView.as_view()),
+    #Poblar BD
+        path('poblar-bd/', PoblarBaseDatosView.as_view()),
 ]
 
 if settings.DEBUG:
