@@ -1,95 +1,107 @@
-# 🎓 Sistema de Gestión de Eventos Académicos - Backend API
+# API REST - Plataforma de Eventos Escolares 📚
 
-Backend desarrollado con **Django REST Framework** para el sistema de gestión de eventos académicos universitarios. Proporciona APIs RESTful para la administración de usuarios y eventos académicos.
+API desarrollada en **Django REST Framework** que proporciona los servicios backend para la plataforma de gestión de eventos escolares.
 
-## 🌐 Despliegue
+## Enlaces de Producción
 
-- **Producción**: [https://app-eventos-backend.onrender.com](https://app-eventos-backend.onrender.com)
-- **Frontend**: [https://app-eventos-frontend.vercel.app](https://app-eventos-frontend.vercel.app)
-
----
-
-## 📋 Tabla de Contenidos
-
-- [Características](#-características)
-- [Tecnologías](#-tecnologías)
-- [Requisitos Previos](#-requisitos-previos)
-- [Instalación](#-instalación)
-- [Configuración de Base de Datos](#-configuración-de-base-de-datos)
-- [Variables de Entorno](#-variables-de-entorno)
-- [Ejecución](#-ejecución)
-- [Endpoints de la API](#-endpoints-de-la-api)
-- [Despliegue en Render](#-despliegue-en-render)
+| Servicio | URL |
+|----------|-----|
+| API Backend | https://app-eventos-backend.onrender.com |
+| Aplicación Web | https://app-eventos-frontend.vercel.app |
 
 ---
 
-## ✨ Características
+## Índice
 
-- ✅ **CRUD completo** para Eventos Académicos
-- ✅ **Gestión de usuarios** (Administradores, Maestros y Alumnos)
-- ✅ **Autenticación** mediante Token Bearer
-- ✅ **Control de acceso por roles**
-- ✅ **Validación de datos** en todas las operaciones
-- ✅ **CORS configurado** para comunicación segura con el Frontend
-- ✅ **WhiteNoise** para servir archivos estáticos en producción
+1. [Funcionalidades](#funcionalidades)
+2. [Stack Tecnológico](#stack-tecnológico)
+3. [Preparación del Entorno](#preparación-del-entorno)
+4. [Guía de Instalación](#guía-de-instalación)
+5. [Base de Datos](#base-de-datos)
+6. [Configuración del Sistema](#configuración-del-sistema)
+7. [Iniciar el Servidor](#iniciar-el-servidor)
+8. [Referencia de la API](#referencia-de-la-api)
+9. [Publicación en Render](#publicación-en-render)
+10. [Organización de Archivos](#organización-de-archivos)
+11. [Resolución de Errores](#resolución-de-errores)
 
 ---
 
-## 🛠 Tecnologías
+## Funcionalidades
 
-| Tecnología | Versión | Uso |
-|------------|---------|-----|
-| Python | 3.10+ | Lenguaje principal |
+El sistema ofrece las siguientes capacidades:
+
+- **Administración de eventos**: Operaciones completas de creación, lectura, actualización y eliminación
+- **Gestión de usuarios**: Soporte para tres tipos de usuario (Administrador, Docente, Estudiante)
+- **Sistema de autenticación**: Implementación de tokens Bearer para seguridad
+- **Permisos por rol**: Restricciones de acceso según el tipo de usuario
+- **Validación robusta**: Verificación de datos en cada operación
+- **Configuración CORS**: Comunicación segura con aplicaciones cliente
+- **Archivos estáticos**: Servidos mediante WhiteNoise en producción
+
+---
+
+## Stack Tecnológico
+
+| Componente | Versión | Propósito |
+|------------|---------|-----------|
+| Python | 3.10+ | Lenguaje de programación |
 | Django | 5.0.2 | Framework web |
-| Django REST Framework | 3.16.1 | APIs REST |
-| PostgreSQL | 15+ | Base de datos (producción) |
-| MySQL | 8.0+ | Base de datos (desarrollo) |
-| Gunicorn | 21.2.0 | Servidor WSGI |
-| WhiteNoise | 6.6.0 | Archivos estáticos |
+| DRF | 3.16.1 | Construcción de APIs |
+| PostgreSQL | 15+ | BD en producción |
+| MySQL | 8.0+ | BD en desarrollo |
+| Gunicorn | 21.2.0 | Servidor de aplicaciones |
+| WhiteNoise | 6.6.0 | Manejo de estáticos |
 
 ---
 
-## 📦 Requisitos Previos
+## Preparación del Entorno
 
-1. **Python 3.10+**
-   ```bash
-   python --version
-   ```
+Antes de comenzar, asegúrate de contar con:
 
-2. **pip**
-   ```bash
-   pip --version
-   ```
-
-3. **MySQL** (solo para desarrollo local)
-   ```bash
-   mysql --version
-   ```
-
----
-
-## 🚀 Instalación
-
-### Paso 1: Clonar y navegar
-
+**Python 3.10 o superior**
 ```bash
-git clone https://github.com/ivanblueberry/app-eventos-backend.git
-cd app-movil-escolar-backend
+python --version
 ```
 
-### Paso 2: Crear entorno virtual
+**Gestor de paquetes pip**
+```bash
+pip --version
+```
+
+**MySQL Server** (únicamente para desarrollo)
+```bash
+mysql --version
+```
+
+---
+
+## Guía de Instalación
+
+### 1. Obtener el código fuente
+
+```bash
+git clone https://github.com/zoeherft/AppMovilEscolarWeb-Backend.git
+cd AppMovilEscolarWeb-Backend
+```
+
+### 2. Configurar entorno virtual de Python
 
 ```bash
 python -m venv venv
+```
 
-# macOS/Linux:
+Activación en **macOS/Linux**:
+```bash
 source venv/bin/activate
+```
 
-# Windows:
+Activación en **Windows**:
+```bash
 venv\Scripts\activate
 ```
 
-### Paso 3: Instalar dependencias
+### 3. Instalar paquetes necesarios
 
 ```bash
 pip install -r requirements.txt
@@ -97,163 +109,167 @@ pip install -r requirements.txt
 
 ---
 
-## 🗄 Configuración de Base de Datos
+## Base de Datos
 
-### Para desarrollo local (MySQL)
+### Configuración para desarrollo (MySQL)
 
-1. **Crear la base de datos:**
-   ```sql
-   CREATE DATABASE app_movil_escolar_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-   ```
+**Paso 1**: Crear la base de datos en MySQL
+```sql
+CREATE DATABASE app_movil_escolar_db 
+CHARACTER SET utf8mb4 
+COLLATE utf8mb4_unicode_ci;
+```
 
-2. **Crear archivo de configuración:**
-   
-   Copia `my.cnf` a `my.cnf.local` y edita con tus credenciales:
-   ```bash
-   cp my.cnf my.cnf.local
-   ```
-   
-   Edita `my.cnf.local`:
-   ```ini
-   [client]
-   host=127.0.0.1
-   port = 3306
-   database = app_movil_escolar_db
-   user = tu_usuario
-   password = tu_contraseña
-   default-character-set = utf8mb4
-   ```
+**Paso 2**: Generar archivo de configuración local
 
-3. **Ejecutar migraciones:**
-   ```bash
-   python manage.py migrate
-   ```
+Duplica el archivo plantilla:
+```bash
+cp my.cnf my.cnf.local
+```
 
----
+Modifica `my.cnf.local` con tus datos:
+```ini
+[client]
+host=127.0.0.1
+port = 3306
+database = app_movil_escolar_db
+user = tu_usuario_mysql
+password = tu_contraseña_mysql
+default-character-set = utf8mb4
+```
 
-## 🔐 Variables de Entorno
-
-### Desarrollo
-No se requieren variables de entorno para desarrollo local.
-
-### Producción (Render)
-
-| Variable | Descripción | Ejemplo |
-|----------|-------------|---------|
-| `SECRET_KEY` | Clave secreta de Django | `tu-clave-secreta-muy-larga` |
-| `DEBUG` | Modo debug | `False` |
-| `DATABASE_URL` | URL de PostgreSQL | `postgres://user:pass@host:5432/db` |
-| `VERCEL_FRONTEND_URL` | URL del frontend | `https://app-eventos-frontend.vercel.app` |
-| `DJANGO_SUPERUSER_USERNAME` | Usuario admin | `admin` |
-| `DJANGO_SUPERUSER_EMAIL` | Email admin | `admin@example.com` |
-| `DJANGO_SUPERUSER_PASSWORD` | Contraseña admin | `tu-password-seguro` |
+**Paso 3**: Aplicar migraciones
+```bash
+python manage.py migrate
+```
 
 ---
 
-## ▶️ Ejecución
+## Configuración del Sistema
 
-### Desarrollo
+### Entorno de Desarrollo
+El sistema funciona sin variables de entorno adicionales en modo desarrollo.
+
+### Entorno de Producción (Render)
+
+Variables requeridas:
+
+| Nombre | Descripción | Valor de ejemplo |
+|--------|-------------|------------------|
+| `SECRET_KEY` | Llave secreta de Django | `clave-aleatoria-segura-123` |
+| `DEBUG` | Activar depuración | `False` |
+| `DATABASE_URL` | Conexión PostgreSQL | `postgres://usr:pwd@host:5432/db` |
+| `VERCEL_FRONTEND_URL` | Dominio del frontend | `https://app-eventos-frontend.vercel.app` |
+| `DJANGO_SUPERUSER_USERNAME` | Nombre de superusuario | `admin` |
+| `DJANGO_SUPERUSER_EMAIL` | Correo de superusuario | `admin@correo.com` |
+| `DJANGO_SUPERUSER_PASSWORD` | Clave de superusuario | `password-seguro` |
+
+---
+
+## Iniciar el Servidor
+
+### Modo desarrollo
 ```bash
 python manage.py runserver
-# Disponible en: http://127.0.0.1:8000/
 ```
+Accede desde: http://127.0.0.1:8000/
 
-### Producción
-El servidor usa Gunicorn configurado en `render.yaml`.
+### Modo producción
+El despliegue utiliza Gunicorn según la configuración en `render.yaml`.
 
 ---
 
-## 📡 Endpoints de la API
+## Referencia de la API
 
-### Base URL
-- **Local**: `http://127.0.0.1:8000`
+### URLs base
+- **Desarrollo**: `http://127.0.0.1:8000`
 - **Producción**: `https://app-eventos-backend.onrender.com`
 
-### 🔐 Autenticación
+### Endpoints de Autenticación
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| POST | `/login/` | Iniciar sesión |
-| GET | `/logout/` | Cerrar sesión |
+| Verbo | Ruta | Función |
+|-------|------|---------|
+| POST | `/login/` | Autenticar usuario |
+| GET | `/logout/` | Finalizar sesión |
 
-### 📅 Eventos
+### Endpoints de Eventos Académicos
 
-| Método | Endpoint | Descripción | Permisos |
-|--------|----------|-------------|----------|
-| GET | `/lista-eventos/` | Listar eventos | Todos |
-| GET | `/eventos/?id={id}` | Obtener evento | Todos |
-| POST | `/eventos/` | Crear evento | Solo Admin |
-| PUT | `/eventos/` | Actualizar evento | Solo Admin |
-| DELETE | `/eventos/?id={id}` | Eliminar evento | Solo Admin |
+| Verbo | Ruta | Función | Acceso |
+|-------|------|---------|--------|
+| GET | `/lista-eventos/` | Consultar todos los eventos | Cualquier usuario |
+| GET | `/eventos/?id={id}` | Consultar evento específico | Cualquier usuario |
+| POST | `/eventos/` | Registrar nuevo evento | Administrador |
+| PUT | `/eventos/` | Modificar evento existente | Administrador |
+| DELETE | `/eventos/?id={id}` | Eliminar evento | Administrador |
 
-### 👥 Usuarios
+### Endpoints de Gestión de Usuarios
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET/POST/PUT/DELETE | `/admin/` | CRUD Administradores |
-| GET/POST/PUT/DELETE | `/maestros/` | CRUD Maestros |
-| GET/POST/PUT/DELETE | `/alumnos/` | CRUD Alumnos |
-
----
-
-## 🚀 Despliegue en Render
-
-1. **Conectar repositorio** en [render.com](https://render.com)
-
-2. **Configurar variables de entorno** (ver sección anterior)
-
-3. **El archivo `render.yaml`** configura automáticamente:
-   - Web Service con Gunicorn
-   - Base de datos PostgreSQL
-   - Build command: `./build.sh`
-
-4. **Push a main** para desplegar automáticamente
+| Verbo | Ruta | Función |
+|-------|------|---------|
+| GET/POST/PUT/DELETE | `/admin/` | Operaciones sobre administradores |
+| GET/POST/PUT/DELETE | `/maestros/` | Operaciones sobre docentes |
+| GET/POST/PUT/DELETE | `/alumnos/` | Operaciones sobre estudiantes |
 
 ---
 
-## 📁 Estructura del Proyecto
+## Publicación en Render
+
+**Paso 1**: Vincular tu repositorio en [render.com](https://render.com)
+
+**Paso 2**: Definir las variables de entorno mencionadas anteriormente
+
+**Paso 3**: El archivo `render.yaml` se encarga de:
+- Configurar el servicio web con Gunicorn
+- Provisionar PostgreSQL
+- Ejecutar `./build.sh` durante el despliegue
+
+**Paso 4**: Cada push a la rama principal activa un nuevo despliegue
+
+---
+
+## Organización de Archivos
 
 ```
-app-movil-escolar-backend/
+AppMovilEscolarWeb-Backend/
 ├── app_movil_escolar_api/
-│   ├── models.py           # Modelos de datos
-│   ├── serializers.py      # Serializadores
-│   ├── settings.py         # Configuración
-│   ├── urls.py             # Rutas
-│   └── views/              # Controladores
-├── build.sh                # Script de build para Render
-├── render.yaml             # Configuración de Render
-├── requirements.txt        # Dependencias
-├── my.cnf                  # Plantilla de config MySQL
-└── manage.py
+│   ├── models.py           # Definición de modelos
+│   ├── serializers.py      # Conversión de datos
+│   ├── settings.py         # Parámetros del proyecto
+│   ├── urls.py             # Definición de rutas
+│   └── views/              # Lógica de negocio
+├── build.sh                # Script de construcción
+├── render.yaml             # Configuración Render
+├── requirements.txt        # Dependencias Python
+├── my.cnf                  # Plantilla MySQL
+└── manage.py               # Utilidad de Django
 ```
 
 ---
 
-## 🔧 Solución de Problemas
+## Resolución de Errores
 
-### Error de conexión a MySQL
-- Verifica que `my.cnf.local` tenga las credenciales correctas
-- Asegúrate de que MySQL esté corriendo
+### No conecta a MySQL
+- Revisa que `my.cnf.local` tenga los datos correctos
+- Confirma que el servicio MySQL esté activo
 
-### Error 401 en API
-- Verifica que el token Bearer esté en el header
-- El token puede haber expirado, vuelve a hacer login
+### Respuesta 401 de la API
+- Asegúrate de incluir el token Bearer en los headers
+- El token pudo expirar, inicia sesión nuevamente
 
-### CORS Error
-- Verifica `CORS_ALLOWED_ORIGINS` en `settings.py`
-- En producción, configura `VERCEL_FRONTEND_URL`
-
----
-
-## 👥 Autores
-
-- **Materia**: Desarrollo de Aplicaciones Móviles
-- **Institución**: Universidad
-- **Fecha**: Noviembre 2025
+### Problemas de CORS
+- Verifica la variable `CORS_ALLOWED_ORIGINS` en `settings.py`
+- En producción, confirma que `VERCEL_FRONTEND_URL` esté configurado
 
 ---
 
-## 📄 Licencia
+## Información del Proyecto
 
-Proyecto educativo - Todos los derechos reservados.
+- **Asignatura**: Desarrollo de Aplicaciones Móviles
+- **Nivel**: Universitario
+- **Periodo**: Noviembre 2025
+
+---
+
+## Términos de Uso
+
+Este proyecto fue desarrollado con fines académicos. Todos los derechos reservados.
